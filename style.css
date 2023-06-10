@@ -28,7 +28,7 @@
 .title{
     text-align: center;
     padding: 20px 0;
-    font-size: 8vmin;
+    font-size: 5vh;
     border-bottom: 1px solid silver;
 }
 .orderBg{
@@ -38,18 +38,18 @@
   width: 80%;
   padding: 5px;
   margin-top: 5px;
-  font-size: 8vmin;
+  font-size: 5vh;
   border-radius: 15px;
 }
 .orderName{
     text-align: left;
-    font-size: 5vmin;
+    font-size: 5vh;
     color: white;
 }
 .orderList{
   margin-top: 5px;
   padding-left: 15px;
-  font-size: 5vmin;
+  font-size: 5vh;
   text-align: left;
   color: white;
 }
@@ -58,7 +58,7 @@
     border-radius: 15px;
     /* position: absolute; */
     text-align: center;
-    font-size: 1vmin;
+    font-size: 5vh;
     padding: 8px 8px;
     margin: 3px;
     width: auto;
@@ -70,7 +70,7 @@
     border-radius: 15px;
     /* position: absolute; */
     text-align: center;
-    font-size: 1vmin;
+    font-size: 5vh;
     margin: 3px;
     padding: 8px 8px;
     width: auto;
