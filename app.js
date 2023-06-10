@@ -177,13 +177,18 @@ function showInput(a, b, c, d, e) {
         let password = inputPassword.value;
         let note = inputNote.value;
 
-        var confirm = window.confirm("確認資料無誤？");
-        if (confirm == true) {
-            alert("成功！");
-            writeNewPost(phoneNums, wechatName, wechatID, password, note);
+        if (phoneNums == "" || wechatName == "") {
+            alert("請輸入'手機編號'及‘名稱’");
         } else {
-            alert("您已取消");
+            var confirm = window.confirm("確認資料無誤？");
+            if (confirm == true) {
+                alert("成功！");
+                writeNewPost(phoneNums, wechatName, wechatID, password, note);
+            } else {
+                alert("您已取消");
+            }
         }
+
 
         //post
         function writeNewPost(
