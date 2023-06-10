@@ -29,7 +29,7 @@ const dbRef = ref(db, "/data/");
 
 //setup
 function setup() {
-    orderList.innerHTML = '<h1 class="title">永和雲手機管理</h1>';//delete div
+    orderList.innerHTML = '<h1 class="title">永和雲手機管理v1</h1>';//delete div
     orderList.innerHTML =
         orderList.innerHTML +
         `<select class="orderBg" id="selectPhoneNumbers">
