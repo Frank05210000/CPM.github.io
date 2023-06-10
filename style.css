@@ -37,18 +37,18 @@
   width: 80%;
   padding: 5px;
   margin-top: 5px;
-  font-size: 2rem;
+  font-size: 3rem;
   border-radius: 15px;
 }
 .orderName{
     text-align: left;
-    font-size: 2rem;
+    font-size: 3rem;
     color: white;
 }
 .orderList{
   margin-top: 5px;
   padding-left: 15px;
-  font-size: 1rem;
+  font-size: 2rem;
   text-align: left;
   color: white;
 }
@@ -57,7 +57,7 @@
     border-radius: 15px;
     /* position: absolute; */
     text-align: center;
-    font-size: 1rem;
+    font-size: 2rem;
     padding: 8px 8px;
     margin: 3px;
     width: auto;
@@ -69,7 +69,7 @@
     border-radius: 15px;
     /* position: absolute; */
     text-align: center;
-    font-size: 1rem;
+    font-size: 2rem;
     margin: 3px;
     padding: 8px 8px;
     width: auto;
