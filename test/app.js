@@ -1,5 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-analytics.js";
+import { getAuth } from 'https://www.gstatic.com/firebasejs/9.14.0/firebase-auth.js'
 import {
     getDatabase,
     ref,
@@ -182,8 +183,13 @@ function showInput(a, b, c, d, e) {
         } else {
             var confirm = window.confirm("確認資料無誤？");
             if (confirm == true) {
-                alert("成功！");
-                writeNewPost(phoneNums, wechatName, wechatID, password, note);
+                try {
+                    writeNewPost(phoneNums, wechatName, wechatID, password, note);
+                    alert("成功！");
+                } catch {
+                    alert("失敗！");
+                }
+
             } else {
                 alert("您已取消");
             }

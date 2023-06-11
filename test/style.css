@@ -1,0 +1,79 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+  }
+  body{
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(120deg,#2980b9, #8e44ad);
+    height: 100vh;
+    overflow:hidden;
+  }
+.center{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    
+    width: 95%;
+    height: 95%;
+    background: white;
+    border-radius: 30px;
+    padding: 15px;
+    box-shadow: 10px 10px 15px rgba(0,0,0,0.05);
+    overflow:auto;
+  }
+.title{
+    text-align: center;
+    padding: 20px 0;
+    font-size: 5vh;
+    border-bottom: 1px solid silver;
+}
+.orderBg{
+  /* background-color: #2980b9; */
+  margin-left: 10%;
+  margin-right: 10%;
+  width: 80%;
+  padding: 5px;
+  margin-top: 5px;
+  font-size: 5vh;
+  border-radius: 15px;
+}
+.orderName{
+    text-align: left;
+    font-size: 5vh;
+    color: white;
+}
+.orderList{
+  margin-top: 5px;
+  padding-left: 15px;
+  font-size: 5vh;
+  text-align: left;
+  color: white;
+}
+.btn1{
+    background-color: #e5b60f;
+    border-radius: 15px;
+    /* position: absolute; */
+    text-align: center;
+    font-size: 5vh;
+    padding: 8px 8px;
+    margin: 3px;
+    width: auto;
+    float: right;
+    /* right: 29%; */
+}
+.btn2{
+    background-color: #e5b60f;
+    border-radius: 15px;
+    /* position: absolute; */
+    text-align: center;
+    font-size: 5vh;
+    margin: 3px;
+    padding: 8px 8px;
+    width: auto;
+    float: right;
+    /* right: 1%; */
+}
