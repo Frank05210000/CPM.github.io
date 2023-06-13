@@ -4,11 +4,17 @@
     <title>Order-page(demo)</title>
     <link rel="stylesheet" href="style.css" />
 <body>
-    <!-- vertical-align: middel -->
-    <div class="center" id="orderList">
+    <div class="center" id="List">
+      <h1 class="title">永和雲手機管理v1</h1>
+      <select class="orderBg" id="selectPhoneNumbers">
+        <option value="choose">請選擇手機編號</option>
+        <option value="addNewData">新增資料</option>
+      </select>
+      <select class="orderBg select" id="selectWechatName">
+        <option value="choose">請選擇名稱</option>
+      </select>
+    <div id="dataInput"></div>
     </div>
-    
-    <!-- <script type="module" src="rtdb.js"></script> -->
     <script type="module" src="app.js"></script>
   </body>
 </html>

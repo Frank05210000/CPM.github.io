@@ -54,9 +54,9 @@ function setup() {
                     `<option value="${a1}">${a1}</option>`;
             });
         },
-        {
-            onlyOnce: true,
-        }
+        // {
+        //     onlyOnce: true,
+        // }
     );
 }
 
@@ -73,9 +73,9 @@ function getWechatName(thisPhoneNums) {
                     `<option value="${a1}">${a1}</option>`;
             });
         },
-        {
-            onlyOnce: true,
-        }
+        // {
+        //     onlyOnce: true,
+        // }
     );
 }
 
@@ -186,6 +186,8 @@ function showInput(a, b, c, d, e) {
                 try {
                     writeNewPost(phoneNums, wechatName, wechatID, password, note);
                     alert("成功！");
+                    hide(dataInput);
+                    showWechatInfo();
                 } catch {
                     alert("失敗！");
                 }

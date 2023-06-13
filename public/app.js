@@ -9,6 +9,8 @@ import {
     onValue,
     push,
     update,
+    remove,
+    onDisconnect
 } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-database.js";
 const firebaseConfig = {
     apiKey: "AIzaSyBHr9zAcW9Tx8IC0CaEVO7WH07YdSZnBEQ",
@@ -24,25 +26,34 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const db = getDatabase();
+const presenceRef = ref(db, "disconnectmessage");
 const dbRef = ref(db, "/data/");
-
 
 //setup
 function setup() {
-    orderList.innerHTML = '<h1 class="title">永和雲手機管理v1</h1>';//delete div
-    orderList.innerHTML =
-        orderList.innerHTML +
-        `<select class="orderBg" id="selectPhoneNumbers">
-            <option value="choose">請選擇手機編號</option>
-            <option value="addNewData">新增資料</option>
-                </select>
-        <select class="orderBg" id="selectWechatName">
-            <option value="choose">請選擇名稱</option>
-                </select>
-        <div id="dataInput"></div>`;
-    var selectPhoneNumbers = document.getElementById("selectPhoneNumbers")
-    var selectWechatName = document.getElementById("selectWechatName")
-    var dataInput = document.getElementById("dataInput")
+    initializationOption();
+    addOption();
+}
+
+function initializationOption() {
+    var List = document.getElementById("List");
+    // List.innerHTML = '<h1 class="title">永和雲手機管理v1</h1>';
+    // List.innerHTML =
+    //     List.innerHTML +
+    //     `<select class="orderBg" id="selectPhoneNumbers">
+    //         <option value="choose">請選擇手機編號</option>
+    //         <option value="addNewData">新增資料</option>
+    //             </select>
+    //     <select class="orderBg" id="selectWechatName">
+    //         <option value="choose">請選擇名稱</option>
+    //             </select>
+    //     <div id="dataInput"></div>`;
+    var selectPhoneNumbers = document.getElementById("selectPhoneNumbers");
+    var selectWechatName = document.getElementById("selectWechatName");
+    var dataInput = document.getElementById("dataInput");
+}
+
+function addOption() {
     onValue(
         dbRef,
         (snapshot) => {
@@ -59,7 +70,44 @@ function setup() {
     );
 }
 
-//getWechatName
+function selectEventListener() {
+    selectPhoneNumbers.onchange = function () {
+        var selectStyle = document.querySelector(".select")
+        let value = selectPhoneNumbers.value
+        if (value == "addNewData") {
+            selectStyle.style.display = "none"
+            showInput("", "", "", "", "");
+            selectWechatName.innerHTML = `<option value="choose">請選擇名稱</option>`;
+
+        }
+        else if (value == "choose") {
+            hide(dataInput);
+            selectStyle.style.display = "none"
+            selectWechatName.innerHTML = `<option value="choose">請選擇名稱</option>`;
+
+        }
+        else {
+            hide(dataInput);
+            selectStyle.style.display = "block"
+            getWechatName(value);
+        }
+    };
+
+    //第二個選擇項清除
+    selectWechatName.onchange = function () {
+        let value = selectWechatName.value
+        if (value == "choose") {
+            hide(dataInput);
+        }
+        else {
+            let value = selectPhoneNumbers.value;
+            let value2 = selectWechatName.value;
+            showWechatInfo();
+            getWechatInfo(value, value2);
+        }
+    };
+}
+
 function getWechatName(thisPhoneNums) {
     var dbRef2 = ref(db, "/data/" + thisPhoneNums + "/");
     selectWechatName.innerHTML = `<option value="choose">請選擇名稱</option>`;
@@ -78,53 +126,51 @@ function getWechatName(thisPhoneNums) {
     );
 }
 
-//getWechatInfo
 function getWechatInfo(thisPhoneNums, thisWechatName) {
     hide(dataInput);
-    perPhoneNumber = thisPhoneNums;
-    perWechatName = thisWechatName;
-    // dataInput.innerHTML = dataInput.innerHTML +
-    //     `<button class="orderBg">編輯</button>`;
+    currentPhoneNumber = thisPhoneNums;
+    currentWechatName = thisWechatName;
     var dbRef3 = ref(db, "/data/" + thisPhoneNums + "/" + thisWechatName + "/");
     onValue(
         dbRef3,
         (snapshot) => {
             snapshot.forEach(function (item) {
-                perWechatId = item.val();
+                currentWechatId = item.val();
                 Sort(item.key, item.val());
             });
         }
     );
 }
 
-//
 function showWechatInfo() {
     hide(dataInput);
     dataInput.innerHTML = dataInput.innerHTML +
-        `<button class="orderBg" id="btnWechatID">帳號：${perWechatId}</button>
-        <button class="orderBg" id="btnPassword">密碼：${perPassword}</button>
-        <button class="orderBg" id="btnEdit">編輯</button>`;
+        `<button class="orderBg" id="btnWechatID">帳號：${currentWechatId}</button>
+        <button class="orderBg" id="btnPassword">密碼：${currentPassword}</button>
+        <button class="orderBg" id="btnEdit">編輯</button>
+        <button class="orderBg" id="btnDelete">刪除</button>`;
+
     const btnWechatID = document.getElementById("btnWechatID");
     const btnPassword = document.getElementById("btnPassword");
     const btnEdit = document.getElementById("btnEdit");
-    btnWechatID.addEventListener("click", function () { copyContent(perWechatId) });
-    btnPassword.addEventListener("click", function () { copyContent(perPassword) });
-    btnEdit.addEventListener("click", function () { showInput(perPhoneNumber, perWechatName, perWechatId, perPassword, perNote) });
+    const btnDelete = document.getElementById("btnDelete");
+
+    btnWechatID.addEventListener("click", function () { copyContent(currentWechatId) });
+    btnPassword.addEventListener("click", function () { copyContent(currentPassword) });
+    btnEdit.addEventListener("click", function () { showInput(currentPhoneNumber, currentWechatName, currentWechatId, currentPassword, currentNote) });
+    btnDelete.addEventListener("click", function () {
+        var confirm = window.confirm("確認刪除？");
+        if (confirm == true) {
+            remove(ref(db, "/data/" + currentPhoneNumber + "/" + currentWechatName + "/"));
+            alert("刪除成功");
+            hide(dataInput);
+        } else {
+            alert("您已取消");
+        }
+    });
 
 }
-
-//補救措施 有錯誤
-function remedy() {
-    btnWechatID.innerHTML = "帳號：${perWechatId}"
-    btnPassword.innerHTML = "密碼：${perPassword}"
-}
-
-//clean list
-function hide(obj) {
-    obj.innerHTML = "";
-}
-
-//show input when user want to edit the info
+//show up input when user want to edit the info
 function showInput(a, b, c, d, e) {
     dataInput.innerHTML =
         `<textarea
@@ -163,6 +209,7 @@ function showInput(a, b, c, d, e) {
             placeholder="備註"
             >${e}</textarea>
             <button class="orderBg" id="btnSubmit">送出</button>`;
+
     const inputPhoneNums = document.getElementById("phoneNumber");
     const inputWechatName = document.getElementById("wechatName");
     const inputWechatID = document.getElementById("wechatId");
@@ -183,65 +230,78 @@ function showInput(a, b, c, d, e) {
             var confirm = window.confirm("確認資料無誤？");
             if (confirm == true) {
                 try {
+                    if (a != "" || b != "") {
+                        remove(ref(db, "/data/" + currentPhoneNumber + "/" + currentWechatName + "/"));
+                    }
                     writeNewPost(phoneNums, wechatName, wechatID, password, note);
-                    alert("成功！");
-                } catch {
-                    alert("失敗！");
+                    document.location.href = "https://cloudphonemanage.web.app/";
                 }
-
+                catch {
+                    alert("失敗！\n請檢查網路");
+                }
             } else {
                 alert("您已取消");
             }
         }
-
-
-        //post
-        function writeNewPost(
-            phone_number,
-            wechat_name,
-            wechat_ID,
-            password,
-            note
-        ) {
-            const db = getDatabase();
-
-            // A post entry.
-            const postData = {
-                wechatID: wechatID,
-                password: password,
-                note: note,
-                time: getTime(),
-            };
-            // Get a key for a new Post.
-            // Write the new post's data simultaneously in the posts list and the user's post list.
-            const updates = {};
-            updates["/data/" + phone_number + "/" + wechatName] = postData;
-            return update(ref(db), updates);
-        }
     });
+}
 
+//post
+function writeNewPost(
+    phoneNumber,
+    wechatName,
+    wechatID,
+    password,
+    note
+) {
+    const postData = {
+        wechatID: wechatID,
+        password: password,
+        note: note,
+        time: getTime(),
+    };
+
+    const updates = {};
+    updates["/data/" + phoneNumber + "/" + wechatName] = postData;
+    return update(ref(db), updates).then(() => {
+        alert("成功！");
+    }).catch((error) => {
+        alert("失敗！\n請檢查網路");
+    });;
+}
+
+//無使用
+// function remedy() {
+//     btnWechatID.innerHTML = "帳號：${currentWechatId}"
+//     btnPassword.innerHTML = "密碼：${currentPassword}"
+// }
+
+//clean list
+function hide(obj) {
+    obj.innerHTML = "";
 }
 
 //sort those mesy data
 function Sort(getKey, getVal) {
     if (getKey == "phoneNumber") {
-        perPhoneNumber = getVal;
+        currentPhoneNumber = getVal;
     } else if (getKey == "wechatName") {
-        perWechatName = getVal;
+        currentWechatName = getVal;
     } else if (getKey == "wechatID") {
-        perWechatId = getVal;
+        currentWechatId = getVal;
     } else if (getKey == "password") {
-        perPassword = getVal;
+        currentPassword = getVal;
     } else if (getKey == "time") {
-        perTime = getVal;
+        currentTime = getVal;
     } else if (getKey == "note") {
-        perNote = getVal;
+        currentNote = getVal;
     } else {
         console.log("error:" + getKey + "," + getVal);
     }
     showWechatInfo();
 }
 
+//copy sth to copybroad
 async function copyContent(obj) {
     try {
         await navigator.clipboard.writeText(obj);
@@ -253,40 +313,7 @@ async function copyContent(obj) {
     }
 }
 
-var perPhoneNumber, perWechatName, perWechatId, perPassword, perTime, perNote;
-var orderList = document.getElementById("orderList");
-setup();
-selectPhoneNumbers.onchange = function () {
-    let value = selectPhoneNumbers.value
-    if (value == "addNewData") {
-        showInput("", "", "", "", "");
-        selectWechatName.innerHTML = `<option value="choose">請選擇名稱</option>`;
-
-    }
-    else if (value == "choose") {
-        hide(dataInput);
-        selectWechatName.innerHTML = `<option value="choose">請選擇名稱</option>`;
-
-    }
-    else {
-        hide(dataInput);
-        getWechatName(value);
-    }
-};
-//第二個選擇項清除
-selectWechatName.onchange = function () {
-    let value = selectWechatName.value
-    if (value == "choose") {
-        hide(dataInput);
-    }
-    else {
-        let value = selectPhoneNumbers.value;
-        let value2 = selectWechatName.value;
-        showWechatInfo();
-        getWechatInfo(value, value2);
-    }
-};
-
+//get get current time
 function getTime() {
     const dt = new Date();
     const padL = (nr, len = 2, chr = `0`) => `${nr}`.padStart(2, chr);
@@ -304,4 +331,11 @@ function getTime() {
         padL(dt.getSeconds());
     return time;
 }
+
+//start
+var currentPhoneNumber, currentWechatName, currentWechatId, currentPassword, currentTime, currentNote;
+setup();
+selectEventListener();
+
+
 
